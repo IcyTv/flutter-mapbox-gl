@@ -36,7 +36,12 @@ Add these lines to your Info.plist
 <true/>
 <key>MGLMapboxAccessToken</key>
 <string>YOUR_TOKEN_HERE</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>This is needed to determine your current location</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This is needed to determine your current location</string>
 ```
+
 
 ## Supported API
 
