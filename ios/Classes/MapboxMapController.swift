@@ -85,6 +85,26 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
                 setMyLocationTrackingMode(myLocationTrackingMode: trackingMode)
             }
             result(nil)
+        case "map#matchMapLanguageWithDeviceDefault":
+            if let style = mapView.style {
+                style.localizeLabels(into: nil)
+            }
+            result(nil)
+        case "map#setMapLanguage":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            if let localIdentifier = arguments["language"] as? String, let style = mapView.style {
+                let locale = Locale(identifier: localIdentifier)
+                style.localizeLabels(into: locale)
+            }
+            result(nil)
+        case "map#setTelemetryEnabled":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            let telemetryEnabled = arguments["enabled"] as? Bool
+            UserDefaults.standard.set(telemetryEnabled, forKey: "MGLMapboxMetricsEnabled")
+            result(nil)
+        case "map#getTelemetryEnabled":
+            let telemetryEnabled = UserDefaults.standard.bool(forKey: "MGLMapboxMetricsEnabled")
+            result(telemetryEnabled)
         case "camera#move":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let cameraUpdate = arguments["cameraUpdate"] as? [Any] else { return }
@@ -334,6 +354,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     
     func mapView(_ mapView: MGLMapView, shouldChangeFrom oldCamera: MGLMapCamera, to newCamera: MGLMapCamera) -> Bool {
         guard let bbox = cameraTargetBounds else { return true }
+                
         // Get the current camera to restore it after.
         let currentCamera = mapView.camera
         
@@ -400,7 +421,27 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
         }
     }
     
-
+    func mapView(_ mapView: MGLMapView, regionWillChangeAnimated animated: Bool) {
+        if let channel = channel {
+            channel.invokeMethod("camera#onMoveStarted", arguments: []);
+        }
+    }
+    
+    func mapViewRegionIsChanging(_ mapView: MGLMapView) {
+        if !trackCameraPosition { return };
+        if let channel = channel {
+            channel.invokeMethod("camera#onMove", arguments: [
+                "position": getCamera()?.toDict(mapView: mapView)
+            ]);
+        }
+    }
+    
+    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
+        if let channel = channel {
+            channel.invokeMethod("camera#onIdle", arguments: []);
+        }
+    }
+    
     /*
      *  MapboxMapOptionsSink
      */
@@ -453,6 +494,9 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
     }
     func setLogoViewMargins(x: Double, y: Double) {
         mapView.logoViewMargins = CGPoint(x: x, y: y)
+    }
+    func setCompassViewPosition(position: MGLOrnamentPosition) {
+        mapView.compassViewPosition = position
     }
     func setCompassViewMargins(x: Double, y: Double) {
         mapView.compassViewMargins = CGPoint(x: x, y: y)
