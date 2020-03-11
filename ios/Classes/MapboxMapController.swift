@@ -2,6 +2,7 @@ import Flutter
 import UIKit
 import Mapbox
 import MapboxAnnotationExtension
+import ClusterKit
 
 class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, MapboxMapOptionsSink, MGLAnnotationControllerDelegate {
     
