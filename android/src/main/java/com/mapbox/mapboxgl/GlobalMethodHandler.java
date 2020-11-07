@@ -76,9 +76,9 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler {
     }
 
     private String extractAccessToken(MethodCall methodCall, String fallbackValue) {
-        if (methodCall.hasArgument("accessToken")) {
-            return methodCall.argument("accessToken");
-        }
+        // if (methodCall.hasArgument("accessToken")) {
+        //     return methodCall.argument("accessToken");
+        // }
 
         return fallbackValue;
     }
