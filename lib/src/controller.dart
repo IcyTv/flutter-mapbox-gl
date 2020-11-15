@@ -267,8 +267,7 @@ class MapboxMapController extends ChangeNotifier {
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
   Future<void> matchMapLanguageWithDeviceDefault() async {
-    return MapboxGlPlatform.getInstance(_id)
-        .matchMapLanguageWithDeviceDefault();
+	  await _globalChannel.invokeMethod("map#matchMapLanguageWithDeviceDefault");
   }
 
   /// Updates the distance from the edges of the map view’s frame to the edges
@@ -294,7 +293,9 @@ class MapboxMapController extends ChangeNotifier {
   /// The returned [Future] completes after the change has been made on the
   /// platform side.
   Future<void> setMapLanguage(String language) async {
-    return MapboxGlPlatform.getInstance(_id).setMapLanguage(language);
+    await _globalChannel.invokeMethod('map#setMapLanguage', <String, dynamic>{
+      'language': language,
+    });
   }
 
   /// Enables or disables the collection of anonymized telemetry data.

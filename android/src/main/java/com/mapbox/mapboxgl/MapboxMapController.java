@@ -153,6 +153,7 @@ final class MapboxMapController
       new MethodChannel(registrar.messenger(), "plugins.flutter.io/mapbox_maps_" + id);
     methodChannel.setMethodCallHandler(this);
     this.registrarActivityHashCode = registrar.activity().hashCode();
+    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap, style);
   }
 
   @Override
