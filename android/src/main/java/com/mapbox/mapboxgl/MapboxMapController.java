@@ -153,7 +153,6 @@ final class MapboxMapController
       new MethodChannel(registrar.messenger(), "plugins.flutter.io/mapbox_maps_" + id);
     methodChannel.setMethodCallHandler(this);
     this.registrarActivityHashCode = registrar.activity().hashCode();
-    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap, style);
   }
 
   @Override
@@ -306,6 +305,7 @@ final class MapboxMapController
   Style.OnStyleLoaded onStyleLoadedCallback = new Style.OnStyleLoaded() {
     @Override
     public void onStyleLoaded(@NonNull Style style) {
+      L.d("Style loaded");
       MapboxMapController.this.style = style;
       enableLineManager(style);
       enableSymbolManager(style);
