@@ -165,7 +165,6 @@ final class MapboxMapController
       new MethodChannel(registrar.messenger(), "plugins.flutter.io/mapbox_maps_" + id);
     methodChannel.setMethodCallHandler(this);
     this.registrarActivityHashCode = registrar.activity().hashCode();
-    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap, style);
   }
 
   @Override
@@ -349,6 +348,7 @@ final class MapboxMapController
       // is fixed with 0.6.0 of annotations plugin
       mapboxMap.addOnMapClickListener(MapboxMapController.this);
       mapboxMap.addOnMapLongClickListener(MapboxMapController.this);
+      L.d("TAG", "Style loaded");
 	    localizationPlugin = new LocalizationPlugin(mapView, mapboxMap, style);
 
       methodChannel.invokeMethod("map#onStyleLoaded", null);
