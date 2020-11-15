@@ -336,7 +336,7 @@ final class MapboxMapController
   Style.OnStyleLoaded onStyleLoadedCallback = new Style.OnStyleLoaded() {
     @Override
     public void onStyleLoaded(@NonNull Style style) {
-      L.d("Style loaded");
+      Log.d("Style loaded");
       MapboxMapController.this.style = style;
       enableLineManager(style);
       enableSymbolManager(style);
